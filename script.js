@@ -154,7 +154,7 @@ function _slideTiga() {
   }).go();
 }
 
-// --- UPDATED: Logic cuối cùng được xử lý tại đây ---
+// --- Logic cuối cùng được xử lý tại đây ---
 function _slideEmpat() {
   const slideEmpat = document.getElementById('slideEmpat');
   slideEmpat.classList.remove('d-none');
@@ -178,36 +178,41 @@ function _slideEmpat() {
   });
 
   btnYes.addEventListener('click', function () {
-    // 1. Bắt đầu hiệu ứng mờ dần cho hộp thoại
     slideEmpat.classList.add('animate__animated', 'animate__fadeOut');
 
-    // 2. Lắng nghe sự kiện khi hiệu ứng mờ dần kết thúc
     slideEmpat.addEventListener('animationend', () => {
-      // 2a. Xóa hộp thoại khỏi DOM để dọn dẹp
       slideEmpat.remove();
 
-      // 2b. BẮT ĐẦU HIỂN THỊ ẢNH KẾT THÚC
       const imageContainer = document.getElementById('image-container');
       const finalImage = document.getElementById('final-image');
       
+      // --- UPDATED LOGIC: Chọn cấu hình ảnh dựa trên kích thước màn hình ---
       if (config.hinhAnhKetThuc) {
-        finalImage.src = config.hinhAnhKetThuc.duongDan || '';
-        finalImage.style.width = config.hinhAnhKetThuc.kichThuoc || '30vw';
-      }
+        let imageConfig;
+        // Màn hình rộng <= 768px được coi là mobile
+        if (window.innerWidth <= 768 && config.hinhAnhKetThuc.mobile) {
+            imageConfig = config.hinhAnhKetThuc.mobile;
+        } else {
+            // Mặc định hoặc màn hình lớn hơn
+            imageConfig = config.hinhAnhKetThuc.desktop;
+        }
 
-      // Hiển thị container
+        if(imageConfig) {
+            finalImage.src = imageConfig.duongDan || '';
+            finalImage.style.width = imageConfig.kichThuoc || '30vw';
+        }
+      }
+      // --- KẾT THÚC LOGIC CẬP NHẬT ---
+
       imageContainer.classList.remove('d-none');
-      
-      // Thêm hiệu ứng bay vào cho ảnh
       finalImage.classList.add('animate__animated', 'animate__bounceIn');
 
-      // Sau khi hiệu ứng bay vào kết thúc, thêm hiệu ứng lơ lửng
       finalImage.addEventListener('animationend', () => {
           finalImage.classList.remove('animate__bounceIn');
           finalImage.classList.add('float-animation');
       }, { once: true });
 
-    }, { once: true }); // { once: true } đảm bảo event chỉ chạy 1 lần
+    }, { once: true });
   });
 }
 
