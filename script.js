@@ -1,4 +1,4 @@
-// Khởi động nhạc nền (chỉ phát sau tương tác người dùng với 1 lần click)
+// Khởi động nhạc nền
 function playMusic() {
   const music = document.getElementById('background-music');
   if (music && music.paused) { music.play().catch(()=>{}); }
@@ -100,7 +100,6 @@ function showNextButton(callback) {
   nextBtn.classList.add('animate__animated','animate__pulse','animate__slow');
   const handler = () => {
     nextBtn.classList.add('d-none');
-    nextBtn.classList.remove('animate__animated','animate__pulse','animate__slow');
     nextBtn.removeEventListener('click', handler);
     callback && callback();
   };
@@ -155,7 +154,7 @@ function _slideTiga() {
   }).go();
 }
 
-// --- UPDATED: Final slide logic with fade-out and video playback ---
+// --- UPDATED: Logic cuối cùng được xử lý tại đây ---
 function _slideEmpat() {
   const slideEmpat = document.getElementById('slideEmpat');
   slideEmpat.classList.remove('d-none');
@@ -179,44 +178,25 @@ function _slideEmpat() {
   });
 
   btnYes.addEventListener('click', function () {
-    // 1. Add fade-out class to the entire body
-    document.body.classList.add('fade-out-all');
-    
-    // 2. Wait for the 1-second fade-out transition to complete
-    setTimeout(() => {
-        // 3. Hide all old content permanently
-        document.getElementById('content').style.display = 'none';
-        const leftContainer = document.getElementById('left-container');
-        const rightContainer = document.getElementById('right-container');
-        if (leftContainer) leftContainer.style.display = 'none';
-        if (rightContainer) rightContainer.style.display = 'none';
-        
-        // 4. Prepare and show the video
-        const videoContainer = document.getElementById('video-container');
-        const finalVideo = document.getElementById('final-video');
-        
-        // Check screen width to select the correct video
-        // Using 768px as a common breakpoint for mobile
-        if (window.innerWidth <= 768) {
-            finalVideo.src = './img/end1.mp4';
-        } else {
-            finalVideo.src = './img/end.mp4';
-        }
-        
-        // Make the video container visible
-        videoContainer.classList.remove('d-none');
-        
-        // Try to play the video
-        finalVideo.play().catch(error => {
-            console.error("Video autoplay was prevented:", error);
-            // Fallback for browsers that block autoplay
-        });
+    // 1. Ẩn hộp thoại lựa chọn
+    slideEmpat.classList.add('animate__animated', 'animate__fadeOut');
 
-    }, 1000); // Wait 1000ms (1 second)
+    // 2. Chuẩn bị và hiển thị ảnh kết thúc
+    const imageContainer = document.getElementById('image-container');
+    const finalImage = document.getElementById('final-image');
+    
+    if (config.hinhAnhKetThuc) {
+      finalImage.src = config.hinhAnhKetThuc.duongDan || '';
+      finalImage.style.width = config.hinhAnhKetThuc.kichThuoc || '30vw';
+    }
+
+    // 3. Hiển thị container của ảnh với hiệu ứng fade-in
+    imageContainer.classList.remove('d-none');
+    imageContainer.classList.add('animate__animated', 'animate__fadeIn');
   });
 }
 
-// Confetti logic (unchanged)
+// Confetti (giữ nguyên)
 'use strict';
 var onlyOnKonami = false;
 function confetti() {

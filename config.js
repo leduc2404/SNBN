@@ -36,5 +36,11 @@ const config = {
     trai: './img/sticker3.gif',  // Đường dẫn sticker bên trái
     phai: './img/sticker2.gif',  // Đường dẫn sticker bên phải
     kichThuoc: '3vw'             // Kích thước của sticker (dùng 'vw' để co giãn theo màn hình)
+  },
+
+  // --- CẤU HÌNH ẢNH KẾT THÚC ---
+  hinhAnhKetThuc: {
+    duongDan: './img/end.png', // Đường dẫn đến ảnh kết thúc
+    kichThuoc: '30vw'         // Kích thước ảnh (vd: '30vw', '250px', '50%')
   }
 };
