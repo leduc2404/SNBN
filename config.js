@@ -41,6 +41,6 @@ const config = {
   // --- CẤU HÌNH ẢNH KẾT THÚC ---
   hinhAnhKetThuc: {
     duongDan: './img/end.png', // Đường dẫn đến ảnh kết thúc
-    kichThuoc: '30vw'         // Kích thước ảnh (vd: '30vw', '250px', '50%')
+    kichThuoc: '50vw'         // Kích thước ảnh (vd: '30vw', '250px', '50%')
   }
 };
