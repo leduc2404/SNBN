@@ -6,14 +6,6 @@ body, html {
   overflow: hidden; /* Ngăn cuộn trang */
 }
 
-/* --- DELETED: Class này không còn cần thiết --- */
-/*
-body.fade-out-all {
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-*/
-
 .bg {
   background-image: url(./img/background.jpg);
   background-position: center center;
@@ -232,7 +224,6 @@ body.fade-out-all {
   background-color: #fff1f4;
 }
 
-/* --- UPDATED: CSS cho ảnh kết thúc dạng overlay --- */
 #image-container {
     position: fixed;
     top: 0;
@@ -240,20 +231,37 @@ body.fade-out-all {
     width: 100vw;
     height: 100vh;
     z-index: 10000;
-    background-color: transparent; /* Nền trong suốt */
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* Cho phép click xuyên qua container */
+    pointer-events: none;
 }
 
 #final-image {
     max-width: 90%;
     max-height: 90%;
     height: auto;
-    pointer-events: auto; /* Cho phép tương tác với ảnh (nếu cần) */
-    /* Width được đặt trong JS từ config */
+    pointer-events: auto;
 }
+
+/* --- NEW: Hiệu ứng lơ lửng nhẹ nhàng --- */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px); /* Điều chỉnh để thay đổi độ cao lơ lửng */
+  }
+}
+
+.float-animation {
+  animation-name: float;
+  animation-duration: 4s; /* Điều chỉnh để thay đổi tốc độ */
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
 
 .countdown { margin: 10px 0 0 0; padding: 0; }
 .countdown-item { list-style: none; }

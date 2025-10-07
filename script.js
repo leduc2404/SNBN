@@ -178,21 +178,36 @@ function _slideEmpat() {
   });
 
   btnYes.addEventListener('click', function () {
-    // 1. Ẩn hộp thoại lựa chọn
+    // 1. Bắt đầu hiệu ứng mờ dần cho hộp thoại
     slideEmpat.classList.add('animate__animated', 'animate__fadeOut');
 
-    // 2. Chuẩn bị và hiển thị ảnh kết thúc
-    const imageContainer = document.getElementById('image-container');
-    const finalImage = document.getElementById('final-image');
-    
-    if (config.hinhAnhKetThuc) {
-      finalImage.src = config.hinhAnhKetThuc.duongDan || '';
-      finalImage.style.width = config.hinhAnhKetThuc.kichThuoc || '30vw';
-    }
+    // 2. Lắng nghe sự kiện khi hiệu ứng mờ dần kết thúc
+    slideEmpat.addEventListener('animationend', () => {
+      // 2a. Xóa hộp thoại khỏi DOM để dọn dẹp
+      slideEmpat.remove();
 
-    // 3. Hiển thị container của ảnh với hiệu ứng fade-in
-    imageContainer.classList.remove('d-none');
-    imageContainer.classList.add('animate__animated', 'animate__fadeIn');
+      // 2b. BẮT ĐẦU HIỂN THỊ ẢNH KẾT THÚC
+      const imageContainer = document.getElementById('image-container');
+      const finalImage = document.getElementById('final-image');
+      
+      if (config.hinhAnhKetThuc) {
+        finalImage.src = config.hinhAnhKetThuc.duongDan || '';
+        finalImage.style.width = config.hinhAnhKetThuc.kichThuoc || '30vw';
+      }
+
+      // Hiển thị container
+      imageContainer.classList.remove('d-none');
+      
+      // Thêm hiệu ứng bay vào cho ảnh
+      finalImage.classList.add('animate__animated', 'animate__bounceIn');
+
+      // Sau khi hiệu ứng bay vào kết thúc, thêm hiệu ứng lơ lửng
+      finalImage.addEventListener('animationend', () => {
+          finalImage.classList.remove('animate__bounceIn');
+          finalImage.classList.add('float-animation');
+      }, { once: true });
+
+    }, { once: true }); // { once: true } đảm bảo event chỉ chạy 1 lần
   });
 }
 
