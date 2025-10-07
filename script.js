@@ -1,220 +1,215 @@
+const dom = {
+  music: document.getElementById('background-music'),
+  leftContainer: document.getElementById('left-container'),
+  rightContainer: document.getElementById('right-container'),
+  leftImage: document.getElementById('left-image'),
+  rightImage: document.getElementById('right-image'),
+  leftSticker: document.getElementById('left-sticker'),
+  rightSticker: document.getElementById('right-sticker'),
+  timer: document.getElementById('timer'),
+  name: document.getElementById('name'),
+  days: document.getElementById('days'),
+  hours: document.getElementById('hours'),
+  minutes: document.getElementById('minutes'),
+  seconds: document.getElementById('seconds'),
+  nextBtn: document.getElementById('nextBtn'),
+  slideSatu: document.getElementById('slideSatu'),
+  slideDua: document.getElementById('slideDua'),
+  slideTiga: document.getElementById('slideTiga'),
+  slideEmpat: document.getElementById('slideEmpat'),
+  likeTitle: document.getElementById('likeTitle'),
+  btnNo: document.getElementById('gak'),
+  btnYes: document.getElementById('suka'),
+  imageContainer: document.getElementById('image-container'),
+  finalImage: document.getElementById('final-image'),
+};
+
+// --- TỐI ƯU: Hàm tiện ích để chờ một khoảng thời gian ---
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Khởi động nhạc nền
 function playMusic() {
-  const music = document.getElementById('background-music');
-  if (music && music.paused) { music.play().catch(()=>{}); }
+  if (dom.music && dom.music.paused) {
+    dom.music.play().catch(() => {});
+  }
 }
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.addEventListener('click', playMusic, { once: true });
 
+// Thiết lập hình ảnh trang trí
+function setupDecorations() {
   if (config.hinhAnhBen) {
-    const leftContainer = document.getElementById('left-container');
-    const rightContainer = document.getElementById('right-container');
-    const leftImg = document.getElementById('left-image');
-    const rightImg = document.getElementById('right-image');
+    dom.leftImage.src = config.hinhAnhBen.trai;
+    dom.leftImage.style.width = config.hinhAnhBen.kichThuoc || '15vw';
+    dom.rightImage.src = config.hinhAnhBen.phai;
+    dom.rightImage.style.width = config.hinhAnhBen.kichThuoc || '15vw';
     
-    if (leftImg && config.hinhAnhBen.trai) {
-      leftImg.src = config.hinhAnhBen.trai;
-      leftImg.style.width = config.hinhAnhBen.kichThuoc || '15vw';
-    }
-    if (rightImg && config.hinhAnhBen.phai) {
-      rightImg.src = config.hinhAnhBen.phai;
-      rightImg.style.width = config.hinhAnhBen.kichThuoc || '15vw';
-    }
-
-    const intensity = config.hinhAnhBen.cuongDoLac || 'nhe';
-    const animationName = 'shake-' + intensity;
-    if(leftContainer) leftContainer.style.animationName = animationName;
-    if(rightContainer) rightContainer.style.animationName = animationName;
+    const intensity = 'shake-' + (config.hinhAnhBen.cuongDoLac || 'nhe');
+    dom.leftContainer.style.animationName = intensity;
+    dom.rightContainer.style.animationName = intensity;
     
     const margin = config.hinhAnhBen.canhLeNgang || '2vw';
-    if (leftContainer) leftContainer.style.left = margin;
-    if (rightContainer) rightContainer.style.right = margin;
+    dom.leftContainer.style.left = margin;
+    dom.rightContainer.style.right = margin;
   }
   
   if (config.hinhDanSticker) {
-    const leftSticker = document.getElementById('left-sticker');
-    const rightSticker = document.getElementById('right-sticker');
-    
-    if (leftSticker && config.hinhDanSticker.trai) {
-      leftSticker.src = config.hinhDanSticker.trai;
-      leftSticker.style.width = config.hinhDanSticker.kichThuoc || '5vw';
-    }
-    if (rightSticker && config.hinhDanSticker.phai) {
-      rightSticker.src = config.hinhDanSticker.phai;
-      rightSticker.style.width = config.hinhDanSticker.kichThuoc || '5vw';
-    }
-  }
-});
-
-function showSideImages() {
-  const leftContainer = document.getElementById('left-container');
-  const rightContainer = document.getElementById('right-container');
-  
-  if (leftContainer && rightContainer) {
-    leftContainer.style.visibility = 'visible';
-    rightContainer.style.visibility = 'visible';
-    
-    leftContainer.classList.add('animate__animated', 'animate__bounceInLeft', 'animate__slow');
-    rightContainer.classList.add('animate__animated', 'animate__bounceInRight', 'animate__slow');
+    dom.leftSticker.src = config.hinhDanSticker.trai;
+    dom.leftSticker.style.width = config.hinhDanSticker.kichThuoc || '5vw';
+    dom.rightSticker.src = config.hinhDanSticker.phai;
+    dom.rightSticker.style.width = config.hinhDanSticker.kichThuoc || '5vw';
   }
 }
 
-const content = document.getElementById('content');
-const timer = document.getElementById('timer');
-const nextBtn = document.getElementById('nextBtn');
+function showSideImages() {
+  dom.leftContainer.style.visibility = 'visible';
+  dom.rightContainer.style.visibility = 'visible';
+  dom.leftContainer.classList.add('animate__animated', 'animate__bounceInLeft', 'animate__slow');
+  dom.rightContainer.classList.add('animate__animated', 'animate__bounceInRight', 'animate__slow');
+}
 
-const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
-const pad = (n) => String(n).padStart(2, '0');
-
+// Đếm ngược
 function startCountdown() {
-  document.getElementById('name').innerText = config.tenNguoiNhan || "";
-  const countDown = new Date(config.ngaySinhNhat).getTime();
+  dom.name.innerText = config.tenNguoiNhan || "";
+  const countDownDate = new Date(config.ngaySinhNhat).getTime();
+  
   const interval = setInterval(() => {
     const now = new Date().getTime();
-    const distance = countDown - now;
+    const distance = countDownDate - now;
 
     if (distance <= 0) {
       clearInterval(interval);
-      timer.classList.add('d-none');
+      dom.timer.classList.add('d-none');
       confetti();
-      showSideImages(); 
-      _slideSatu();
+      showSideImages();
+      mainFlow(); // --- TỐI ƯU: Bắt đầu luồng chính ---
       return;
     }
 
-    const d = Math.floor(distance / day);
-    const h = Math.floor((distance % day) / hour);
-    const m = Math.floor((distance % hour) / minute);
-    const s = Math.floor((distance % minute) / second);
-
-    document.getElementById('days').innerText = pad(d);
-    document.getElementById('hours').innerText = pad(h);
-    document.getElementById('minutes').innerText = pad(m);
-    document.getElementById('seconds').innerText = pad(s);
+    const pad = (n) => String(n).padStart(2, '0');
+    dom.days.innerText = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
+    dom.hours.innerText = pad(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    dom.minutes.innerText = pad(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+    dom.seconds.innerText = pad(Math.floor((distance % (1000 * 60)) / 1000));
   }, 1000);
 }
 
-function showNextButton(callback) {
-  nextBtn.textContent = config.nutTiepTuc || "Tiếp tục";
-  nextBtn.classList.remove('d-none');
-  nextBtn.classList.add('animate__animated','animate__pulse','animate__slow');
-  const handler = () => {
-    nextBtn.classList.add('d-none');
-    nextBtn.removeEventListener('click', handler);
-    callback && callback();
-  };
-  nextBtn.addEventListener('click', handler);
+// --- TỐI ƯU: Các hàm tiện ích cho luồng chính (async/await) ---
+
+// 1. Chờ người dùng nhấn nút "Tiếp tục"
+function waitForNextButtonClick() {
+  return new Promise(resolve => {
+    dom.nextBtn.classList.remove('d-none');
+    dom.nextBtn.classList.add('animate__animated','animate__pulse','animate__slow');
+    dom.nextBtn.textContent = config.nutTiepTuc || "Tiếp tục";
+    
+    dom.nextBtn.onclick = () => {
+      dom.nextBtn.classList.add('d-none');
+      dom.nextBtn.onclick = null; // Xóa event listener
+      resolve();
+    };
+  });
 }
 
-function _slideSatu() {
-  const slideSatu = document.getElementById('slideSatu');
-  slideSatu.classList.remove('d-none');
-  setTimeout(() => {
-    showNextButton(() => _slideDua());
-  }, 2000);
+// 2. Hàm gõ chữ
+function typeMessage(elementId, messages) {
+  return new Promise(resolve => {
+    new TypeIt(elementId, {
+      strings: messages,
+      startDelay: 500,
+      speed: 75,
+      waitUntilVisible: true,
+      afterComplete: resolve,
+    }).go();
+  });
 }
 
-function _slideDua() {
-  const slideSatu = document.getElementById('slideSatu');
-  slideSatu.classList.replace('animate__slideInDown', 'animate__backOutDown');
-  setTimeout(() => { slideSatu.classList.add('d-none'); }, 900);
+// 3. Xử lý phần lựa chọn "Thích/Không"
+function handleChoice() {
+  return new Promise(resolve => {
+    dom.slideEmpat.classList.remove('d-none');
+    dom.slideEmpat.classList.add('animate__fadeInDown');
+    
+    dom.likeTitle.innerText = config.tieuDeThichKhong || "Bạn có thích không?";
+    dom.btnNo.textContent = config.nutKhong || "Không";
+    dom.btnYes.textContent = config.nutThich || "Thích";
 
-  const slideDua = document.getElementById('slideDua');
-  slideDua.classList.remove('d-none');
+    dom.btnNo.onclick = () => {
+      const x = Math.floor(Math.random() * (window.innerHeight - 200));
+      const y = Math.floor(Math.random() * (window.innerWidth - 400));
+      dom.slideEmpat.style.position = 'absolute';
+      dom.slideEmpat.style.top = x + 'px';
+      dom.slideEmpat.style.left = y + 'px';
+    };
 
-  new TypeIt("#teks1", {
-    strings: config.loiChucMoDau || [],
-    startDelay: 500,
-    speed: 75,
-    waitUntilVisible: true,
-    afterComplete: () => {
-      showNextButton(() => {
-        slideDua.classList.replace('animate__zoomInDown','animate__fadeOutLeft');
-        setTimeout(() => { slideDua.remove(); _slideTiga(); }, 800);
-      });
-    }
-  }).go();
+    dom.btnYes.onclick = () => {
+      dom.slideEmpat.classList.replace('animate__fadeInDown', 'animate__fadeOut');
+      dom.slideEmpat.addEventListener('animationend', resolve, { once: true });
+    };
+  });
 }
 
-function _slideTiga() {
-  const slideTiga = document.getElementById('slideTiga');
-  slideTiga.classList.remove('d-none');
-
-  new TypeIt("#teks2", {
-    strings: config.loiChucTiepTheo || [],
-    startDelay: 500,
-    speed: 75,
-    waitUntilVisible: true,
-    afterComplete: () => {
-      showNextButton(() => {
-        slideTiga.classList.replace('animate__fadeInRight','animate__fadeOut');
-        setTimeout(() => { slideTiga.remove(); _slideEmpat(); }, 800);
-      });
-    }
-  }).go();
-}
-
-// --- Logic cuối cùng được xử lý tại đây ---
-function _slideEmpat() {
-  const slideEmpat = document.getElementById('slideEmpat');
-  slideEmpat.classList.remove('d-none');
-
-  document.getElementById('likeTitle').innerText = config.tieuDeThichKhong || "Bạn có thích không?";
-  const btnNo = document.getElementById('gak');
-  const btnYes = document.getElementById('suka');
-  btnNo.textContent = config.nutKhong || "Không";
-  btnYes.textContent = config.nutThich || "Thích";
-
-  function getRandomPosition(element) {
-    const y = document.body.offsetWidth - element.clientWidth;
-    const randomX = Math.floor(Math.random() * 500);
-    const randomY = Math.floor(Math.random() * y);
-    return [randomX, randomY];
+// 4. Hiển thị ảnh kết thúc
+function showFinalImage() {
+  let imageConfig = config.hinhAnhKetThuc.desktop;
+  if (window.innerWidth <= 768 && config.hinhAnhKetThuc.mobile) {
+    imageConfig = config.hinhAnhKetThuc.mobile;
   }
-
-  btnNo.addEventListener('click', function () {
-    const xy = getRandomPosition(slideEmpat);
-    slideEmpat.style.top = xy[0] + 'px';
-  });
-
-  btnYes.addEventListener('click', function () {
-    slideEmpat.classList.add('animate__animated', 'animate__fadeOut');
-
-    slideEmpat.addEventListener('animationend', () => {
-      slideEmpat.remove();
-
-      const imageContainer = document.getElementById('image-container');
-      const finalImage = document.getElementById('final-image');
-      
-      // --- UPDATED LOGIC: Chọn cấu hình ảnh dựa trên kích thước màn hình ---
-      if (config.hinhAnhKetThuc) {
-        let imageConfig;
-        // Màn hình rộng <= 768px được coi là mobile
-        if (window.innerWidth <= 768 && config.hinhAnhKetThuc.mobile) {
-            imageConfig = config.hinhAnhKetThuc.mobile;
-        } else {
-            // Mặc định hoặc màn hình lớn hơn
-            imageConfig = config.hinhAnhKetThuc.desktop;
-        }
-
-        if(imageConfig) {
-            finalImage.src = imageConfig.duongDan || '';
-            finalImage.style.width = imageConfig.kichThuoc || '30vw';
-        }
-      }
-      // --- KẾT THÚC LOGIC CẬP NHẬT ---
-
-      imageContainer.classList.remove('d-none');
-      finalImage.classList.add('animate__animated', 'animate__bounceIn');
-
-      finalImage.addEventListener('animationend', () => {
-          finalImage.classList.remove('animate__bounceIn');
-          finalImage.classList.add('float-animation');
-      }, { once: true });
-
-    }, { once: true });
-  });
+  
+  if (imageConfig) {
+    dom.finalImage.src = imageConfig.duongDan || '';
+    dom.finalImage.style.width = imageConfig.kichThuoc || '50vw';
+  }
+  
+  dom.imageContainer.classList.remove('d-none');
+  dom.finalImage.classList.add('animate__animated', 'animate__bounceIn');
+  dom.finalImage.addEventListener('animationend', () => {
+    dom.finalImage.classList.remove('animate__bounceIn');
+    dom.finalImage.classList.add('float-animation');
+  }, { once: true });
 }
+
+// --- TỐI ƯU: Luồng chính của ứng dụng được viết lại bằng async/await ---
+const mainFlow = async () => {
+  // Slide 1
+  dom.slideSatu.classList.remove('d-none');
+  await waitForNextButtonClick();
+  
+  // Chuyển sang Slide 2
+  dom.slideSatu.querySelector('img').classList.replace('animate__slideInDown', 'animate__backOutDown');
+  await wait(900);
+  dom.slideSatu.classList.add('d-none');
+  
+  dom.slideDua.classList.remove('d-none');
+  dom.slideDua.classList.add('animate__zoomInDown');
+  await typeMessage("#teks1", config.loiChucMoDau || []);
+  await waitForNextButtonClick();
+  
+  // Chuyển sang Slide 3
+  dom.slideDua.classList.replace('animate__zoomInDown', 'animate__fadeOutLeft');
+  await wait(800);
+  dom.slideDua.classList.add('d-none');
+  
+  dom.slideTiga.classList.remove('d-none');
+  dom.slideTiga.classList.add('animate__fadeInRight');
+  await typeMessage("#teks2", config.loiChucTiepTheo || []);
+  await waitForNextButtonClick();
+
+  // Chuyển sang Slide 4 (lựa chọn)
+  dom.slideTiga.classList.replace('animate__fadeInRight', 'animate__fadeOut');
+  await wait(800);
+  dom.slideTiga.classList.add('d-none');
+
+  await handleChoice();
+
+  // Hiển thị ảnh cuối cùng
+  showFinalImage();
+};
+
+// --- Khởi chạy khi trang được tải ---
+window.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', playMusic, { once: true });
+  setupDecorations();
+  startCountdown();
+});
 
 // Confetti (giữ nguyên)
 'use strict';
