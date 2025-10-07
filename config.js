@@ -49,7 +49,7 @@ const config = {
     // Cấu hình cho màn hình nhỏ (điện thoại)
     mobile: {
       duongDan: './img/end.png', // Đường dẫn ảnh cho mobile (có thể là ảnh khác)
-      kichThuoc: '85vw'                 // Kích thước ảnh cho mobile (thường lớn hơn)
+      kichThuoc: '86vw'                 // Kích thước ảnh cho mobile (thường lớn hơn)
     }
   }
 };

@@ -238,26 +238,28 @@ body, html {
     pointer-events: none;
 }
 
+/* --- UPDATED: Chỉnh sửa tại đây để ảnh không bị méo --- */
 #final-image {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 90vw;   /* Giới hạn chiều rộng tối đa là 90% màn hình */
+    max-height: 90vh;  /* Giới hạn chiều cao tối đa là 90% màn hình */
+    object-fit: contain; /* THUỘC TÍNH QUAN TRỌNG: Giữ tỷ lệ ảnh */
     height: auto;
     pointer-events: auto;
+    /* width sẽ được đặt bởi JS từ file config */
 }
 
-/* --- NEW: Hiệu ứng lơ lửng nhẹ nhàng --- */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-20px); /* Điều chỉnh để thay đổi độ cao lơ lửng */
+    transform: translateY(-20px);
   }
 }
 
 .float-animation {
   animation-name: float;
-  animation-duration: 4s; /* Điều chỉnh để thay đổi tốc độ */
+  animation-duration: 4s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 }
