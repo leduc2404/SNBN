@@ -356,3 +356,141 @@ body, html {
     margin-top: 3px;
   }
 }
+
+/* --- MỚI: HIỆU ỨNG VUI NHỘN CHO MÀN HÌNH COUNTDOWN --- */
+/* Các icon rơi xuống */
+.falling-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0; /* Nằm sau countdown nhưng trên background */
+}
+
+.fall-item {
+  position: absolute;
+  top: -10%;
+  font-size: 1.5rem;
+  opacity: 0.7;
+  animation: fall-animation linear infinite;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fall-animation {
+  100% {
+    transform: translateY(105vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Ngẫu nhiên hóa thuộc tính của các icon */
+.fall-item:nth-of-type(1) { left: 10%; animation-duration: 15s; animation-delay: -5s; }
+.fall-item:nth-of-type(2) { left: 20%; animation-duration: 10s; animation-delay: -10s; font-size: 1.2rem; }
+.fall-item:nth-of-type(3) { left: 30%; animation-duration: 18s; animation-delay: -2s; }
+.fall-item:nth-of-type(4) { left: 40%; animation-duration: 12s; animation-delay: -12s; font-size: 1.8rem; }
+.fall-item:nth-of-type(5) { left: 50%; animation-duration: 16s; animation-delay: -8s; }
+.fall-item:nth-of-type(6) { left: 60%; animation-duration: 9s; animation-delay: -1s; font-size: 1.3rem; }
+.fall-item:nth-of-type(7) { left: 70%; animation-duration: 20s; animation-delay: -15s; }
+.fall-item:nth-of-type(8) { left: 80%; animation-duration: 11s; animation-delay: -4s; font-size: 1.6rem; }
+.fall-item:nth-of-type(9) { left: 85%; animation-duration: 14s; animation-delay: -9s; }
+.fall-item:nth-of-type(10) { left: 15%; animation-duration: 17s; animation-delay: -7s; }
+.fall-item:nth-of-type(11) { left: 55%; animation-duration: 13s; animation-delay: -3s; font-size: 1.1rem; }
+.fall-item:nth-of-type(12) { left: 75%; animation-duration: 19s; animation-delay: -6s; }
+
+/* --- MỚI: Các nhân vật hoạt hình --- */
+
+/* Style chung cho tất cả nhân vật */
+.peeking-char {
+  position: fixed;
+  bottom: 0;
+  z-index: 5;
+  pointer-events: none;
+  transform: translateY(100%); /* Ẩn ban đầu */
+  animation-name: peek-animation;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Keyframe animation chung */
+@keyframes peek-animation {
+  0%, 30%, 100% { transform: translateY(100%); }
+  10%, 20% { transform: translateY(0); }
+  12% { transform: translateY(0) rotate(-8deg); } /* Lắc lư mạnh hơn một chút */
+  18% { transform: translateY(0) rotate(8deg); }
+}
+
+/* --- Cấu hình cho màn hình DESKTOP --- */
+
+/* Nhân vật 1 (Trái) */
+#peeking-char-1 {
+  width: 160px;
+  left: 5vw;
+  animation-duration: 12s; /* Chu kỳ dài */
+  animation-delay: 2s;      /* Bắt đầu sau 2s */
+}
+
+/* Nhân vật 2 (Giữa-trái) */
+#peeking-char-2 {
+  width: 130px;
+  left: 30vw;
+  animation-duration: 9s;   /* Chu kỳ ngắn hơn */
+  animation-delay: 5s;      /* Bắt đầu muộn hơn */
+}
+
+/* Nhân vật 3 (Giữa-phải) */
+#peeking-char-3 {
+  width: 150px;
+  right: 28vw;
+  animation-duration: 15s;  /* Chu kỳ rất dài, ít xuất hiện */
+  animation-delay: 0s;      /* Bắt đầu ngay lập tức */
+}
+
+/* Nhân vật 4 (Phải) */
+#peeking-char-4 {
+  width: 140px;
+  right: 6vw;
+  animation-duration: 10s;  /* Chu kỳ trung bình */
+  animation-delay: 7s;      /* Bắt đầu muộn nhất */
+}
+
+
+/* --- Cấu hình cho màn hình MOBILE --- */
+@media (max-width: 768px) {
+  /* Giảm kích thước và điều chỉnh vị trí cho phù hợp */
+  
+  #peeking-char-1 {
+    width: 110px;
+    left: 2vw;
+    animation-duration: 11s;
+    animation-delay: 1s;
+  }
+  
+  /* Ẩn bớt nhân vật 2 để tránh rối mắt */
+  #peeking-char-2 {
+    display: none; 
+  }
+
+  #peeking-char-3 {
+    width: 100px;
+    right: 2vw; /* Đẩy ra sát cạnh phải */
+    animation-duration: 13s;
+    animation-delay: 4s;
+  }
+
+  /* Chuyển nhân vật 4 vào gần giữa */
+  #peeking-char-4 {
+    width: 90px;
+    right: auto; /* Bỏ vị trí right cũ */
+    left: 40vw; /* Đặt vị trí left mới */
+    animation-duration: 9s;
+    animation-delay: 7s;
+  }
+  
+  .fall-item {
+    font-size: 1.2rem;
+  }
+}
