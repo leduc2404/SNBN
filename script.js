@@ -63,15 +63,28 @@ function showSideImages() {
   dom.rightContainer.classList.add('animate__animated', 'animate__bounceInRight', 'animate__slow');
 }
 
+// --- IMPROVED: Kiểm tra ngày sinh nhật trước khi hiển thị countdown ---
 function startCountdown() {
   dom.name.innerText = config.tenNguoiNhan || "";
   const countDownDate = new Date(config.ngaySinhNhat).getTime();
-  
-  const interval = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = countDownDate - now;
+  const now = new Date().getTime();
+  const distance = countDownDate - now;
 
-    if (distance <= 0) {
+  // Nếu đã đến hoặc qua ngày sinh nhật, bỏ qua countdown
+  if (distance <= 0) {
+    dom.timer.classList.add('d-none');
+    confetti();
+    showSideImages();
+    mainFlow();
+    return; // Dừng hàm tại đây
+  }
+
+  // Nếu chưa đến sinh nhật, tiếp tục hiển thị countdown
+  const interval = setInterval(() => {
+    const nowLoop = new Date().getTime();
+    const distanceLoop = countDownDate - nowLoop;
+
+    if (distanceLoop <= 0) {
       clearInterval(interval);
       dom.timer.classList.add('d-none');
       confetti();
@@ -81,12 +94,13 @@ function startCountdown() {
     }
 
     const pad = (n) => String(n).padStart(2, '0');
-    dom.days.innerText = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
-    dom.hours.innerText = pad(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    dom.minutes.innerText = pad(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
-    dom.seconds.innerText = pad(Math.floor((distance % (1000 * 60)) / 1000));
+    dom.days.innerText = pad(Math.floor(distanceLoop / (1000 * 60 * 60 * 24)));
+    dom.hours.innerText = pad(Math.floor((distanceLoop % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    dom.minutes.innerText = pad(Math.floor((distanceLoop % (1000 * 60 * 60)) / (1000 * 60)));
+    dom.seconds.innerText = pad(Math.floor((distanceLoop % (1000 * 60)) / 1000));
   }, 1000);
 }
+
 
 function waitForNextButtonClick() {
   return new Promise(resolve => {
@@ -114,7 +128,6 @@ function typeMessage(elementId, messages) {
   });
 }
 
-// --- IMPROVED: Xử lý phần lựa chọn "Thích/Không" với hiệu ứng liền mạch ---
 function handleChoice() {
   return new Promise(resolve => {
     const choiceBox = dom.slideEmpat;
@@ -125,7 +138,7 @@ function handleChoice() {
     dom.btnNo.textContent = config.nutKhong || "Không";
     dom.btnYes.textContent = config.nutThich || "Thích";
     
-    let isMoving = false; // Cờ để ngăn chặn click liên tục khi đang di chuyển
+    let isMoving = false;
 
     dom.btnNo.onclick = () => {
       if (isMoving) return;
@@ -154,15 +167,12 @@ function handleChoice() {
       const newY = Math.floor(Math.random() * (bottomBoundary - topBoundary)) + topBoundary;
       const newX = Math.floor(Math.random() * (rightBoundary - leftBoundary)) + leftBoundary;
 
-      // Kích hoạt hiệu ứng và di chuyển
       choiceBox.classList.add('is-moving');
       choiceBox.style.position = 'absolute';
       choiceBox.style.top = newY + 'px';
       choiceBox.style.left = newX + 'px';
       
-      // Lắng nghe sự kiện khi transition kết thúc
       choiceBox.addEventListener('transitionend', () => {
-          // Trả hiệu ứng về trạng thái ban đầu và cho phép click lại
           choiceBox.classList.remove('is-moving');
           isMoving = false;
       }, { once: true });

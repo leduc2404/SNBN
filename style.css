@@ -169,7 +169,6 @@ body, html {
   box-shadow: 0 8px 25px rgba(255, 133, 162, 0.6);
 }
 
-/* --- IMPROVED: Hiệu ứng di chuyển mượt mà hơn --- */
 .kotak {
   position: relative;
   width: 90%;
@@ -182,7 +181,6 @@ body, html {
   box-shadow: 0 10px 40px rgba(255, 105, 180, 0.25);
   display: inline-block;
   overflow: hidden;
-  /* Hiệu ứng di chuyển nảy lên (ease-out-back) */
   transition: top 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), 
               left 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
               transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -269,7 +267,6 @@ body, html {
   }
 }
 
-/* NEW: Lớp để kích hoạt hiệu ứng khi di chuyển */
 .kotak.is-moving {
   transform: scale(1.1) rotate(5deg);
 }
@@ -332,4 +329,30 @@ body, html {
   text-transform: uppercase;
   font-weight: bold;
   margin-top: 5px;
+}
+
+/* --- NEW: Responsive Countdown for Mobile --- */
+@media (max-width: 576px) {
+  .container {
+    top: 200px; /* Đẩy countdown lên cao hơn một chút */
+  }
+  .container h5 {
+    font-size: 1.2rem; /* Thu nhỏ tiêu đề */
+  }
+  .countdown-item {
+     margin: 0 !important; /* Bỏ margin của bootstrap để các box gần nhau hơn */
+  }
+  .countdown-box {
+    width: 75px;
+    height: 75px;
+    margin: 0 4px; /* Tạo khoảng cách mới giữa các box */
+    border-width: 2px;
+  }
+  .countdown-box span {
+    font-size: 1.8rem; /* Thu nhỏ số đếm */
+  }
+  .countdown-box small {
+    font-size: 0.6rem; /* Thu nhỏ chữ (Ngày, Giờ...) */
+    margin-top: 3px;
+  }
 }
