@@ -24,17 +24,14 @@ const dom = {
   finalImage: document.getElementById('final-image'),
 };
 
-// --- TỐI ƯU: Hàm tiện ích để chờ một khoảng thời gian ---
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Khởi động nhạc nền
 function playMusic() {
   if (dom.music && dom.music.paused) {
     dom.music.play().catch(() => {});
   }
 }
 
-// Thiết lập hình ảnh trang trí
 function setupDecorations() {
   if (config.hinhAnhBen) {
     dom.leftImage.src = config.hinhAnhBen.trai;
@@ -66,7 +63,6 @@ function showSideImages() {
   dom.rightContainer.classList.add('animate__animated', 'animate__bounceInRight', 'animate__slow');
 }
 
-// Đếm ngược
 function startCountdown() {
   dom.name.innerText = config.tenNguoiNhan || "";
   const countDownDate = new Date(config.ngaySinhNhat).getTime();
@@ -80,7 +76,7 @@ function startCountdown() {
       dom.timer.classList.add('d-none');
       confetti();
       showSideImages();
-      mainFlow(); // --- TỐI ƯU: Bắt đầu luồng chính ---
+      mainFlow();
       return;
     }
 
@@ -92,9 +88,6 @@ function startCountdown() {
   }, 1000);
 }
 
-// --- TỐI ƯU: Các hàm tiện ích cho luồng chính (async/await) ---
-
-// 1. Chờ người dùng nhấn nút "Tiếp tục"
 function waitForNextButtonClick() {
   return new Promise(resolve => {
     dom.nextBtn.classList.remove('d-none');
@@ -103,13 +96,12 @@ function waitForNextButtonClick() {
     
     dom.nextBtn.onclick = () => {
       dom.nextBtn.classList.add('d-none');
-      dom.nextBtn.onclick = null; // Xóa event listener
+      dom.nextBtn.onclick = null;
       resolve();
     };
   });
 }
 
-// 2. Hàm gõ chữ
 function typeMessage(elementId, messages) {
   return new Promise(resolve => {
     new TypeIt(elementId, {
@@ -122,32 +114,67 @@ function typeMessage(elementId, messages) {
   });
 }
 
-// 3. Xử lý phần lựa chọn "Thích/Không"
+// --- IMPROVED: Xử lý phần lựa chọn "Thích/Không" với hiệu ứng liền mạch ---
 function handleChoice() {
   return new Promise(resolve => {
-    dom.slideEmpat.classList.remove('d-none');
-    dom.slideEmpat.classList.add('animate__fadeInDown');
+    const choiceBox = dom.slideEmpat;
+    choiceBox.classList.remove('d-none');
+    choiceBox.classList.add('animate__fadeInDown');
     
     dom.likeTitle.innerText = config.tieuDeThichKhong || "Bạn có thích không?";
     dom.btnNo.textContent = config.nutKhong || "Không";
     dom.btnYes.textContent = config.nutThich || "Thích";
+    
+    let isMoving = false; // Cờ để ngăn chặn click liên tục khi đang di chuyển
 
     dom.btnNo.onclick = () => {
-      const x = Math.floor(Math.random() * (window.innerHeight - 200));
-      const y = Math.floor(Math.random() * (window.innerWidth - 400));
-      dom.slideEmpat.style.position = 'absolute';
-      dom.slideEmpat.style.top = x + 'px';
-      dom.slideEmpat.style.left = y + 'px';
+      if (isMoving) return;
+      isMoving = true;
+
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const boxRect = choiceBox.getBoundingClientRect();
+
+      let leftBoundary = 20;
+      let rightBoundary = vw - boxRect.width - 20;
+      let topBoundary = 20;
+      let bottomBoundary = vh - boxRect.height - 20;
+
+      const leftContainerStyle = window.getComputedStyle(dom.leftContainer);
+      if (leftContainerStyle.display !== 'none' && leftContainerStyle.visibility === 'visible') {
+          leftBoundary = dom.leftContainer.getBoundingClientRect().right + 10;
+          rightBoundary = dom.rightContainer.getBoundingClientRect().left - boxRect.width - 10;
+      }
+      
+      if (rightBoundary <= leftBoundary) {
+          leftBoundary = 20;
+          rightBoundary = vw - boxRect.width - 20;
+      }
+
+      const newY = Math.floor(Math.random() * (bottomBoundary - topBoundary)) + topBoundary;
+      const newX = Math.floor(Math.random() * (rightBoundary - leftBoundary)) + leftBoundary;
+
+      // Kích hoạt hiệu ứng và di chuyển
+      choiceBox.classList.add('is-moving');
+      choiceBox.style.position = 'absolute';
+      choiceBox.style.top = newY + 'px';
+      choiceBox.style.left = newX + 'px';
+      
+      // Lắng nghe sự kiện khi transition kết thúc
+      choiceBox.addEventListener('transitionend', () => {
+          // Trả hiệu ứng về trạng thái ban đầu và cho phép click lại
+          choiceBox.classList.remove('is-moving');
+          isMoving = false;
+      }, { once: true });
     };
 
     dom.btnYes.onclick = () => {
-      dom.slideEmpat.classList.replace('animate__fadeInDown', 'animate__fadeOut');
-      dom.slideEmpat.addEventListener('animationend', resolve, { once: true });
+      choiceBox.classList.replace('animate__fadeInDown', 'animate__fadeOut');
+      choiceBox.addEventListener('animationend', resolve, { once: true });
     };
   });
 }
 
-// 4. Hiển thị ảnh kết thúc
 function showFinalImage() {
   let imageConfig = config.hinhAnhKetThuc.desktop;
   if (window.innerWidth <= 768 && config.hinhAnhKetThuc.mobile) {
@@ -167,13 +194,10 @@ function showFinalImage() {
   }, { once: true });
 }
 
-// --- TỐI ƯU: Luồng chính của ứng dụng được viết lại bằng async/await ---
 const mainFlow = async () => {
-  // Slide 1
   dom.slideSatu.classList.remove('d-none');
   await waitForNextButtonClick();
   
-  // Chuyển sang Slide 2
   dom.slideSatu.querySelector('img').classList.replace('animate__slideInDown', 'animate__backOutDown');
   await wait(900);
   dom.slideSatu.classList.add('d-none');
@@ -183,7 +207,6 @@ const mainFlow = async () => {
   await typeMessage("#teks1", config.loiChucMoDau || []);
   await waitForNextButtonClick();
   
-  // Chuyển sang Slide 3
   dom.slideDua.classList.replace('animate__zoomInDown', 'animate__fadeOutLeft');
   await wait(800);
   dom.slideDua.classList.add('d-none');
@@ -193,25 +216,21 @@ const mainFlow = async () => {
   await typeMessage("#teks2", config.loiChucTiepTheo || []);
   await waitForNextButtonClick();
 
-  // Chuyển sang Slide 4 (lựa chọn)
   dom.slideTiga.classList.replace('animate__fadeInRight', 'animate__fadeOut');
   await wait(800);
   dom.slideTiga.classList.add('d-none');
 
   await handleChoice();
 
-  // Hiển thị ảnh cuối cùng
   showFinalImage();
 };
 
-// --- Khởi chạy khi trang được tải ---
 window.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', playMusic, { once: true });
   setupDecorations();
   startCountdown();
 });
 
-// Confetti (giữ nguyên)
 'use strict';
 var onlyOnKonami = false;
 function confetti() {
@@ -267,6 +286,3 @@ function confetti() {
   }}
   if(!onlyOnKonami) poof();
 }
-
-// Khởi chạy
-startCountdown();
