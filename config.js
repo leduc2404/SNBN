@@ -1,7 +1,7 @@
 // Cấu hình cá nhân hoá (tất cả nội dung tiếng Việt nằm ở đây)
 const config = {
   tenNguoiNhan: "Bích Ngọc",
-  ngaySinhNhat: "Oct 10, 2025 00:00:00",
+  ngaySinhNhat: "Oct 10, 2024 00:00:00",
   loiChucMoDau: [
     "Chúc mừng sinh nhật tuổi 20!!",
     "Bước sang tuổi 20, chúc chị luôn xinh đẹp rạng ngời, tự tin tỏa sáng và thật thành công trên con đường đã chọn.",
@@ -10,7 +10,7 @@ const config = {
   ],
   loiChucTiepTheo: [
     "Cảm ơn vì 1 năm qua đã đồng hành cùng nhau",
-    "Dù có những lúc chưa đạt được mục tiêu, nhưng em biết chị cũng rất cố gắng",
+    "Dù có những lúc chưa đạt được mục tiêu, nhưng em biết chị cũng rất cố gắng, đừng bỏ cuộc nhéee",
     "Mong rằng tuổi 20 và những năm sau, chúng ta sẽ cùng nhau làm nên đại sự!"
   ],
   tieuDeThichKhong: "Phải thật rực rỡ nhé?",
