@@ -3,19 +3,16 @@ const config = {
   tenNguoiNhan: "Bích Ngọc",
   ngaySinhNhat: "Oct 10, 2024 00:00:00",
   loiChucMoDau: [
-    /* "Hôm nay , mình gửi lên trời những lời chúc tốt đẹp nhất dành cho bạn.",
-    "Mong rằng những điều từng làm bạn gục ngã cũng sẽ trở thành lý do để bạn trưởng thành bền bỉ hơn.",
-    "Chúc thế giới luôn dịu dàng với bạn, ở bất kỳ nơi đâu bạn đứng.",
-    "Cầu mong mỗi ngày của bạn được phủ đầy những yêu thương không bờ bến.",
-    "Mong mọi bước chân của bạn đều thuận lợi để chạm đến điều mình ấp ủ." */
-    "Hi"
+    "Chúc mừng sinh nhật tuổi 20!!",
+    "Bước sang tuổi 20, chúc chị luôn xinh đẹp rạng ngời, tự tin tỏa sáng và thật thành công trên con đường đã chọn.",
+    "Đây là thời khắc để chị can đảm bước ra khỏi vùng an toàn, biến những ước mơ thành hiện thực và viết nên câu chuyện của riêng mình.",
+    "Mong rằng tuổi 20 của chị sẽ ngập tràn những trải nghiệm đáng giá, những nụ cười rạng rỡ và những khoảnh khắc hạnh phúc thật trọn vẹn."
   ],
   loiChucTiepTheo: [
-    /* "Dù có mình hay không, mong vũ trụ luôn biết cách làm bạn mỉm cười.",
-    "Barakallah fii umrik — chúc bạn thêm tuổi mới thật an lành và mạnh mẽ.",
-    "Cám ơn bạn vì đã kiên cường đến tận hôm nay.",
-    "- Chúc mọi điều tốt đẹp nhất sẽ tìm đến bạn." */
-    "Hello"
+    "Một năm đồng hành cùng chị đã để lại trong em nhiều kỉ niệm.",
+    "Dù có những lúc chưa đạt được mục tiêu, nhưng em biết chị cũng rất cố gắng",
+    "Em vẫn sẽ ở đây, cùng chị bước đi trên những chặng đường sắp tới.",
+    "Mong rằng tuổi 20 và những năm sau, chúng ta vẫn sẽ cùng nhau làm nên đại sự!"
   ],
   tieuDeThichKhong: "Phải thật rực rỡ nhé?",
   nutKhong: "No",
@@ -29,7 +26,7 @@ const config = {
     phai: './img/img2.jpg',
     kichThuoc: '14vw',
     cuongDoLac: 'vua',
-    canhLeNgang: '5vw'
+    canhLeNgang: '7vw'
   },
 
   // --- CẤU HÌNH STICKER ---
